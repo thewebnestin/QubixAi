@@ -30,7 +30,7 @@ const initialKnowledgeBase = [
     id: "contact_information",
     category: "contact",
     title: "Contact & Support",
-    content: "Clients can contact Webnest using the 'Start a Project' forms on the website, or by emailing hello@webnest.studio. The office is located in Washington, D.C., USA. Form submissions automatically trigger our backend mailer service, notifying the admin instantly and delivering a welcoming success roadmap email to the client."
+    content: "Clients can contact Webnest using the 'Start a Project' forms on the website, or by emailing thewebnest.in@gmail.com. The office is located in Washington, D.C., USA. Form submissions automatically trigger our backend mailer service, notifying the admin instantly and delivering a welcoming success roadmap email to the client."
   },
   {
     id: "qubix_ai_details",

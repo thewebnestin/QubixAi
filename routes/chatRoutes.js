@@ -1,6 +1,6 @@
 const express = require('express');
 const ChatController = require('../controllers/chatController');
-const { geminiClient } = require('../config/ai');
+const { geminiClient, groqClient } = require('../config/ai');
 const { db } = require('../config/firebase');
 
 const router = express.Router();
@@ -12,7 +12,8 @@ router.get('/', (req, res) => {
     service: 'Qubix AI Assistant API',
     firestore: db ? 'configured' : 'not_configured',
     providers: {
-      gemini: geminiClient ? 'configured' : 'not_configured'
+      gemini: geminiClient ? 'configured' : 'not_configured',
+      groq: groqClient ? 'configured' : 'not_configured'
     }
   });
 });

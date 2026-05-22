@@ -1,4 +1,4 @@
-const { geminiClient } = require('../config/ai');
+const { geminiClient, groqClient } = require('../config/ai');
 const KnowledgeModel = require('../models/knowledgeModel');
 
 class AIService {
@@ -62,9 +62,54 @@ GUIDELINES:
         return response.response.text();
       } catch (geminiError) {
         console.error(`[ChatService] Gemini API call failed: ${geminiError.message}.`);
-        if (geminiError.message.includes('429') || geminiError.message.toLowerCase().includes('quota')) {
-          return "Something went wrong. Please try again later.";
+        const isRateLimit = geminiError.message.includes('429') || 
+                            geminiError.message.toLowerCase().includes('quota') || 
+                            geminiError.message.toLowerCase().includes('limit') || 
+                            geminiError.message.toLowerCase().includes('exhausted');
+
+        if (isRateLimit && groqClient) {
+          console.log(`[ChatService] ${new Date().toISOString()} Gemini rate limit hit. Falling back to Groq LLM (llama-3.3-70b-versatile)...`);
+          try {
+            const groqMessages = [
+              { role: 'system', content: systemPrompt }
+            ];
+
+            (history || [])
+              .filter(msg => msg.id !== 'welcome' && msg.text)
+              .forEach(msg => {
+                const role = msg.sender === 'user' ? 'user' : 'assistant';
+                if (groqMessages.length > 0 && groqMessages[groqMessages.length - 1].role === role) {
+                  groqMessages[groqMessages.length - 1].content += "\n" + msg.text;
+                } else {
+                  groqMessages.push({
+                    role: role,
+                    content: msg.text
+                  });
+                }
+              });
+
+            groqMessages.push({
+              role: 'user',
+              content: message
+            });
+
+            const chatCompletion = await groqClient.chat.completions.create({
+              messages: groqMessages,
+              model: 'llama-3.3-70b-versatile',
+              temperature: 0.7,
+              max_tokens: 1024
+            });
+
+            if (chatCompletion.choices && chatCompletion.choices[0] && chatCompletion.choices[0].message) {
+              console.log(`[ChatService] Response generated successfully using Groq fallback.`);
+              return chatCompletion.choices[0].message.content;
+            }
+          } catch (groqError) {
+            console.error(`[ChatService] Groq API call failed: ${groqError.message}.`);
+          }
         }
+
+        console.log(`[ChatService] Falling back to database response matching.`);
         return this.getDatabaseFallback(message, kb);
       }
     } else {
