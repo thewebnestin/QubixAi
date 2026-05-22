@@ -27,7 +27,7 @@ GUIDELINES:
     let lastRole = null;
 
     (history || [])
-      .filter(msg => msg.id !== 'welcome')
+      .filter(msg => msg.id !== 'welcome' && msg.text)
       .forEach(msg => {
         const role = msg.sender === 'user' ? 'user' : 'model';
         if (role !== lastRole) {
@@ -83,6 +83,7 @@ GUIDELINES:
     
     // 1. Try exact keyword matching on titles first
     for (const item of kb) {
+      if (!item || typeof item.title !== 'string' || typeof item.content !== 'string') continue;
       const lowerTitle = item.title.toLowerCase();
       if (lowerMsg.includes('pric') || lowerMsg.includes('cost') || lowerMsg.includes('plan')) {
         if (lowerTitle.includes('price') || lowerTitle.includes('plan')) return item.content;
@@ -106,6 +107,7 @@ GUIDELINES:
     let maxMatchScore = 0;
     
     for (const item of kb) {
+      if (!item || typeof item.title !== 'string' || typeof item.content !== 'string') continue;
       const titleWords = item.title.toLowerCase().split(/[^a-z0-9]+/);
       let score = 0;
       for (const word of titleWords) {

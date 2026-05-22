@@ -3,6 +3,7 @@ const AIService = require('../services/aiService');
 class ChatController {
   static async handleChat(req, res) {
     const { message, history } = req.body;
+    console.log("Chat Request Body:", JSON.stringify(req.body, null, 2));
 
     if (!message) {
       return res.status(400).json({ error: 'Message field is required.' });
