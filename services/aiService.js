@@ -61,7 +61,10 @@ GUIDELINES:
         const response = await chat.sendMessage(message);
         return response.response.text();
       } catch (geminiError) {
-        console.error(`[ChatService] Gemini API call failed: ${geminiError.message}. Falling back to database response.`);
+        console.error(`[ChatService] Gemini API call failed: ${geminiError.message}.`);
+        if (geminiError.message.includes('429') || geminiError.message.toLowerCase().includes('quota')) {
+          return "Something went wrong. Please try again later.";
+        }
         return this.getDatabaseFallback(message, kb);
       }
     } else {
