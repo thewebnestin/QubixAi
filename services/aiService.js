@@ -61,33 +61,72 @@ GUIDELINES:
         const response = await chat.sendMessage(message);
         return response.response.text();
       } catch (geminiError) {
-        console.error(`[ChatService] Gemini API call failed: ${geminiError.message}. Falling back to simulated response.`);
-        return this.getSimulatedFallback(message);
+        console.error(`[ChatService] Gemini API call failed: ${geminiError.message}. Falling back to database response.`);
+        return this.getDatabaseFallback(message, kb);
       }
     } else {
       // Simulated response if no API keys are configured
       console.log(`[ChatService] ${new Date().toISOString()} Simulating response (No GEMINI_API_KEY configured)`);
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(this.getSimulatedFallback(message));
+          resolve(this.getDatabaseFallback(message, kb));
         }, 800);
       });
     }
   }
 
-  static getSimulatedFallback(message) {
+  static getDatabaseFallback(message, kb) {
     const lowerMsg = message.toLowerCase();
     
-    if (lowerMsg.includes('price') || lowerMsg.includes('cost') || lowerMsg.includes('plan')) {
-      return "Webnest Studio offers three premium pricing plans designed to elevate your digital presence:\n\n*   **Startup Plan ($999):** Core custom UI design, full responsive development, basic SEO, and basic contact form setup.\n*   **Growth Plan ($1,999):** Advanced page animations, CMS integrations, custom blog, and one custom external API sync.\n*   **Enterprise Plan ($3,999+):** Custom web application, custom database design, administrative dashboard panel, priority SLA support, and Qubix AI chatbot integration.";
-    } else if (lowerMsg.includes('service') || lowerMsg.includes('offer') || lowerMsg.includes('do')) {
-      return "Webnest specializes in the following core services:\n\n*   **Custom Web Design & UI/UX**: High-end visuals and fluid web animations.\n*   **Web & Web App Development**: Solid Next.js, React, and Node.js solutions.\n*   **AI Automations & Integrations**: Custom chat systems (Qubix AI), CRM syncs, and automated notification services.\n*   **E-Commerce Solutions**: Modern storefronts, payments, and checkout flows.";
-    } else if (lowerMsg.includes('contact') || lowerMsg.includes('email') || lowerMsg.includes('reach') || lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
-      return "Hello! You can reach the Webnest team at Hello@webnest.studio, or submit your project details using the 'Start a Project' tab in the navigation menu.";
-    } else if (lowerMsg.includes('project') || lowerMsg.includes('portfolio') || lowerMsg.includes('work')) {
-      return "We have delivered several premium digital projects:\n\n*   **Verta**: A modern product showcase landing layout with responsive card animations.\n*   **BloomAtelier**: An elegant e-commerce design and branding storefront representing luxury products.\n*   **Sharaco**: A high-performing web-based POS SaaS system equipped with sales metrics and responsive dashboard analytics.";
+    // 1. Try exact keyword matching on titles first
+    for (const item of kb) {
+      const lowerTitle = item.title.toLowerCase();
+      if (lowerMsg.includes('pric') || lowerMsg.includes('cost') || lowerMsg.includes('plan')) {
+        if (lowerTitle.includes('price') || lowerTitle.includes('plan')) return item.content;
+      }
+      if (lowerMsg.includes('service') || lowerMsg.includes('offer') || lowerMsg.includes('do')) {
+        if (lowerTitle.includes('service') || lowerTitle.includes('offer')) return item.content;
+      }
+      if (lowerMsg.includes('contact') || lowerMsg.includes('email') || lowerMsg.includes('reach') || lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+        if (lowerTitle.includes('contact') || lowerTitle.includes('support')) return item.content;
+      }
+      if (lowerMsg.includes('project') || lowerMsg.includes('portfolio') || lowerMsg.includes('work')) {
+        if (lowerTitle.includes('project') || lowerTitle.includes('portfolio')) return item.content;
+      }
+      if (lowerMsg.includes('about') || lowerMsg.includes('who') || lowerMsg.includes('webnest') || lowerMsg.includes('qubix')) {
+        if (lowerTitle.includes('about') || lowerTitle.includes('agency')) return item.content;
+      }
     }
     
+    // 2. Fallback to token matching score
+    let bestMatch = null;
+    let maxMatchScore = 0;
+    
+    for (const item of kb) {
+      const titleWords = item.title.toLowerCase().split(/[^a-z0-9]+/);
+      let score = 0;
+      for (const word of titleWords) {
+        if (word.length > 2 && lowerMsg.includes(word)) {
+          score += 10;
+        }
+      }
+      const contentWords = item.content.toLowerCase().split(/[^a-z0-9]+/);
+      for (const word of contentWords) {
+        if (word.length > 3 && lowerMsg.includes(word)) {
+          score += 1;
+        }
+      }
+      if (score > maxMatchScore) {
+        maxMatchScore = score;
+        bestMatch = item;
+      }
+    }
+    
+    if (bestMatch && maxMatchScore > 0) {
+      return bestMatch.content;
+    }
+    
+    // 3. Default general response
     return "I am here to assist you with Webnest Studio's details, custom requests, or general inquiries. Please let me know how I can help!";
   }
 }
