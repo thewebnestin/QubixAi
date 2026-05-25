@@ -20,7 +20,13 @@ GUIDELINES:
 2. Answer all user queries politely, professionally, and helpfully. You are authorized to answer general knowledge questions, coding/programming help, or custom requests alongside queries about Webnest Studio.
 3. Keep your tone sleek, futuristic, welcoming, and professional.
 4. Keep answers relatively concise (1-3 paragraphs) as they render in a small chat window.
-5. NEVER expose internal server details, database schemas, Firestore paths, private keys, API configurations, or code tracebacks to the user.`;
+5. NEVER expose internal server details, database schemas, Firestore paths, private keys, API configurations, or code tracebacks to the user.
+6. Whenever you suggest the user contact Webnest, view pricing, check services, or view projects, you MUST include a standard markdown link to that route:
+   - Contact Page: [Contact Us](/contact)
+   - Pricing Page: [View Pricing](/pricing)
+   - Services Page: [Our Services](/services)
+   - Projects Page: [View Projects](/projects)
+   These links will render as interactive buttons in the user's chat screen.`;
     // 2. Format history for Google Gemini API: [{ role: 'user'|'model', parts: [{ text: '...' }] }]
     // Ensure roles strictly alternate to satisfy Gemini API constraints. Merge consecutive messages from the same sender.
     const geminiHistory = [];
@@ -131,19 +137,19 @@ GUIDELINES:
       if (!item || typeof item.title !== 'string' || typeof item.content !== 'string') continue;
       const lowerTitle = item.title.toLowerCase();
       if (lowerMsg.includes('pric') || lowerMsg.includes('cost') || lowerMsg.includes('plan')) {
-        if (lowerTitle.includes('price') || lowerTitle.includes('plan')) return item.content;
+        if (lowerTitle.includes('price') || lowerTitle.includes('plan')) return item.content + "\n\n[View Pricing](/pricing)";
       }
       if (lowerMsg.includes('service') || lowerMsg.includes('offer') || lowerMsg.includes('do')) {
-        if (lowerTitle.includes('service') || lowerTitle.includes('offer')) return item.content;
+        if (lowerTitle.includes('service') || lowerTitle.includes('offer')) return item.content + "\n\n[Our Services](/services)";
       }
-      if (lowerMsg.includes('contact') || lowerMsg.includes('email') || lowerMsg.includes('reach') || lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
-        if (lowerTitle.includes('contact') || lowerTitle.includes('support')) return item.content;
+      if (lowerMsg.includes('contact') || lowerMsg.includes('email') || lowerMsg.includes('reach') || lowerMsg.includes('hire') || lowerMsg.includes('support')) {
+        if (lowerTitle.includes('contact') || lowerTitle.includes('support')) return item.content + "\n\n[Contact Us](/contact)";
       }
       if (lowerMsg.includes('project') || lowerMsg.includes('portfolio') || lowerMsg.includes('work')) {
-        if (lowerTitle.includes('project') || lowerTitle.includes('portfolio')) return item.content;
+        if (lowerTitle.includes('project') || lowerTitle.includes('portfolio')) return item.content + "\n\n[View Projects](/projects)";
       }
       if (lowerMsg.includes('about') || lowerMsg.includes('who') || lowerMsg.includes('webnest') || lowerMsg.includes('qubix')) {
-        if (lowerTitle.includes('about') || lowerTitle.includes('agency')) return item.content;
+        if (lowerTitle.includes('about') || lowerTitle.includes('agency')) return item.content + "\n\n[Our Services](/services)";
       }
     }
     
@@ -173,11 +179,18 @@ GUIDELINES:
     }
     
     if (bestMatch && maxMatchScore > 0) {
-      return bestMatch.content;
+      // Append matching quick redirects based on best match category
+      const bestTitle = bestMatch.title.toLowerCase();
+      let suffix = "";
+      if (bestTitle.includes("price") || bestTitle.includes("plan")) suffix = "\n\n[View Pricing](/pricing)";
+      else if (bestTitle.includes("service") || bestTitle.includes("offer")) suffix = "\n\n[Our Services](/services)";
+      else if (bestTitle.includes("contact") || bestTitle.includes("support")) suffix = "\n\n[Contact Us](/contact)";
+      else if (bestTitle.includes("project") || bestTitle.includes("portfolio")) suffix = "\n\n[View Projects](/projects)";
+      return bestMatch.content + suffix;
     }
     
     // 3. Default general response
-    return "I am here to assist you with Webnest Studio's details, custom requests, or general inquiries. Please let me know how I can help!";
+    return "I am here to assist you with Webnest Studio's details. If you'd like to get in touch with our team, feel free to use our [Contact Us](/contact) page!";
   }
 }
 
