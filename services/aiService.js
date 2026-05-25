@@ -26,7 +26,8 @@ GUIDELINES:
    - Pricing Page: [View Pricing](/pricing)
    - Services Page: [Our Services](/services)
    - Projects Page: [View Projects](/projects)
-   These links will render as interactive buttons in the user's chat screen.`;
+   These links will render as interactive buttons in the user's chat screen.
+7. When asked about Contact info, Pricing plans, Services, or Projects/Portfolio, you MUST ALWAYS provide BOTH the details (e.g. phone/email/location, starting prices/packages, service list, or portfolio URLs) and the matching route link together. Do not just link to the page; display the details directly in the chat first so the user gets their answer immediately, followed by the redirect button.`;
     // 2. Format history for Google Gemini API: [{ role: 'user'|'model', parts: [{ text: '...' }] }]
     // Ensure roles strictly alternate to satisfy Gemini API constraints. Merge consecutive messages from the same sender.
     const geminiHistory = [];
