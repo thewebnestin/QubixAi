@@ -7,14 +7,14 @@ const initialKnowledgeBase = [
     category: "general",
     title: "About Xplode Studio",
     content:
-      "Xplode is a premium digital design and web development agency. We specialize in building fast, modern, and highly interactive websites, custom web applications, and state-of-the-art AI automation workflows (like custom AI chatbots and lead qualifiers) that help businesses transform their digital presence.",
+      "Xplode is a premium digital design and web development agency. We specialize in building fast, modern, and highly interactive websites, custom web applications, AI integrations on existing products, custom AI-integrated software and services, and state-of-the-art AI automation workflows (like custom AI chatbots and lead qualifiers) that help businesses transform their digital presence.",
   },
   {
     id: "xplode_services",
     category: "services",
     title: "Services Offered",
     content:
-      "Xplode specializes in the following core services:\n1. **UI/UX Design**: Crafting digital journeys that feel intuitive and look stunning. Includes custom-crafted visuals and fluid layout animations.\n2. **Custom Web & Web App Development**: Building solid, secure, and fast React, Next.js, and Node.js solutions with fully responsive layouts.\n3. **AI Automations & Integrations**: Empowering your business with next-gen intelligence, custom chat systems (like Qubix AI), CRM synchronization, and automated notification/mailer systems.\n4. **E-Commerce Solutions**: Launching stunning online stores with product catalogs, secure payment gateways, cart checkouts, and inventory/order notification systems.\n5. **Search & AI Optimization**: Increasing search traffic and platform visibility using built-in SEO and website optimization audits.\n6. **Analytics & Performance**: Tracking website performance with key traffic, SEO, and eCommerce metrics.",
+      "Xplode specializes in the following core services:\n1. **UI/UX Design**: Crafting digital journeys that feel intuitive and look stunning. Includes custom-crafted visuals and fluid layout animations.\n2. **Custom Web & Web App Development**: Building solid, secure, and fast React, Next.js, and Node.js solutions with fully responsive layouts.\n3. **AI Automations & Integrations**: Empowering your business with next-gen intelligence, performing AI integration on existing products, creating AI-integrated software & services, custom chat systems (like Qubix AI), CRM synchronization, and automated notification/mailer systems.\n4. **E-Commerce Solutions**: Launching stunning online stores with product catalogs, secure payment gateways, cart checkouts, and inventory/order notification systems.\n5. **Search & AI Optimization**: Increasing search traffic and platform visibility using built-in SEO and website optimization audits.\n6. **Analytics & Performance**: Tracking website performance with key traffic, SEO, and eCommerce metrics.",
   },
   {
     id: "pricing_plans",

@@ -4,11 +4,11 @@ const { db } = require('../config/firebase');
 const fallbackKnowledgeBase = [
   {
     title: "About Xplode Studio",
-    content: "Xplode is a premium digital design and web development agency. We specialize in building fast, modern, and highly interactive websites, custom web applications, and state-of-the-art AI automation workflows (like custom AI chatbots and lead qualifiers) that help businesses transform their digital presence."
+    content: "Xplode is a premium digital design and web development agency. We specialize in building fast, modern, and highly interactive websites, custom web applications, AI integrations on existing products, custom AI-integrated software and services, and state-of-the-art AI automation workflows (like custom AI chatbots and lead qualifiers) that help businesses transform their digital presence."
   },
   {
     title: "Services Offered",
-    content: "Xplode offers the following key services:\n1. Custom Web Design & UI/UX Development: High-end, custom-crafted visuals and fluid animations.\n2. Web & Web App Development: Solid React/Next.js/Node.js developments with responsive layouts.\n3. AI Automations & Integrations: Intelligent assistants, chatbot systems (like Qubix AI), CRM sync, and automated notification services.\n4. E-Commerce Solutions: Sleek storefront designs, payments checkout, and inventory notifications."
+    content: "Xplode offers the following key services:\n1. Custom Web Design & UI/UX Development: High-end, custom-crafted visuals and fluid animations.\n2. Web & Web App Development: Solid React/Next.js/Node.js developments with responsive layouts.\n3. AI Automations & Integrations: Intelligent assistants, performing AI integration on existing products, creating AI-integrated software & services, chatbot systems (like Qubix AI), CRM sync, and automated notification services.\n4. E-Commerce Solutions: Sleek storefront designs, payments checkout, and inventory notifications."
   },
   {
     title: "Pricing Plans",
